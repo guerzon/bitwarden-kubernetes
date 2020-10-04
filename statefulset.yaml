@@ -1,0 +1,72 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bitwarden
+  namespace: bitwarden
+  labels:
+    app: bitwarden
+spec:
+  serviceName: bitwarden
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bitwarden
+  template:
+    metadata:
+      labels:
+        app: bitwarden
+    spec:
+      containers:
+        - image: bitwardenrs/server:latest
+          imagePullPolicy: Always
+          name: bitwarden
+          envFrom:
+            - configMapRef:
+                name: bitwarden-cmap
+          env:
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: bitwarden-secrets
+                  key: SMTP_USERNAME
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bitwarden-secrets
+                  key: SMTP_PASSWORD
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bitwarden-secrets
+                  key: ADMIN_TOKEN
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+            - containerPort: 3012
+              name: websocket
+              protocol: TCP
+          volumeMounts:
+            - name: bitwarden-data
+              mountPath: /data
+          resources:
+            limits:
+              cpu: 300m
+              memory: 1Gi
+            requests:
+              cpu: 50m
+              memory: 256Mi
+      serviceAccountName: warden
+  volumeClaimTemplates:
+    - metadata:
+        name: bitwarden-data
+        annotations:
+          volume.beta.kubernetes.io/storage-class: "sc-ebs-gp2-zone1"
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "15Gi"
+        storageClassName: default
