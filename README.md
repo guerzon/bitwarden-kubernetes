@@ -55,6 +55,10 @@ Finally, run the following command to apply the manifests:
 
 `kubectl apply -f .`
 
+## Credits
+
+- [icicimov's](https://github.com/icicimov/kubernetes-bitwarden_rs) repo, although it appears to have been outdated, for the inspiration.
+
 ## License
 
 This work is licensed under [GNU GPL v3](./LICENSE).
