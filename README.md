@@ -2,6 +2,10 @@
 
 This projects contains Kubernetes manifest files for deploying a production-ready self-hosted Bitwarden solution in Kubernetes. It utilizes the Rust-based implementation from [https://github.com/dani-garcia/bitwarden_rs](https://github.com/dani-garcia/bitwarden_rs).
 
+## Advisory
+
+This project is no longer maintained. If you are interested with running Bitwarden on Kubernetes, please consider [vaultwarden](https://github.com/guerzon/vaultwarden) instead.
+
 ## Configuration
 
 * Objects are created in the `bitwarden` namespace.
